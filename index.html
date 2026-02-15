@@ -109,7 +109,7 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   // --- load and display bubbles ---
   async function loadBubbles() {
-    const { data } = await supabase
+    const { data } = await supabaseClient
       .from("vote_feelings_poll_items")
       .select("*");
 
@@ -130,7 +130,7 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
       bubble.style.transform = `rotate(${Math.random()*6 - 3}deg)`;
 
       bubble.onclick = async () => {
-        await supabase
+        await supabaseClient
           .from("vote_feelings_poll_items")
           .update({ count: item.count + 1 })
           .eq("id", item.id);
@@ -143,12 +143,12 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   // --- reset votes ---
   async function resetVotes() {
-    const { data } = await supabase
+    const { data } = await supabaseClient
       .from("vote_feelings_poll_items")
       .select("*");
 
     for (const item of data) {
-      await supabase
+      await supabaseClient
         .from("vote_feelings_poll_items")
         .update({ count: 0 })
         .eq("id", item.id);
