@@ -95,7 +95,7 @@
   const SUPABASE_URL = "https://fyhdwrinacxoxzwkqmfk.supabase.co";
  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ5aGR3cmluYWN4b3h6d2txbWZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExMjE3ODQsImV4cCI6MjA4NjY5Nzc4NH0.o7cnIuVrW8ZNomaxVdunl_um26KHqvMczGQ6ez0xQQA";
 
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   const container = document.getElementById("bubble-container");
 
