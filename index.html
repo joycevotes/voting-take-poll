@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Vote Feelings Poll</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #f4f6ff;
+    }
+
+    #bubble-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 40px;
+      gap: 20px;
+    }
+
+    .bubble {
+      border-radius: 50px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: white;
+      font-weight: bold;
+      background: #5b7cfa;
+    }
+
+    .bubble:hover {
+      background: #3f5eea;
+    }
+
+    #resetBtn {
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>How Does Voting Make You Feel?</h1>
+
+<div id="bubble-container"></div>
+
+<button id="resetBtn">Teacher Reset</button>
+
+<script>
+  const SUPABASE_URL = "https://fyhdwrinacxoxzwkqmfk.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ5aGR3cmluYWN4b3h6d2txbWZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExMjE3ODQsImV4cCI6MjA4NjY5Nzc4NH0.o7cnIuVrW8ZNomaxVdunl_um26KHqvMczGQ6ez0xQQA";
+
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const container = document.getElementById("bubble-container");
+
+  async function loadBubbles() {
+    const { data } = await supabaseClient
+      .from("vote_feelings_poll_items")
+      .select("*");
+
+    container.innerHTML = "";
+
+    data.forEach(item => {
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.innerText = item.label;
+
+      const size = 20 + (item.count * 4);
+      bubble.style.fontSize = size + "px";
+
+      bubble.onclick = async () => {
+        await supabaseClient
+          .from("vote_feelings_poll_items")
+          .update({ count: item.count + 1 })
+          .eq("id", item.id);
+
+        loadBubbles();
+      };
+
+      container.appendChild(bubble);
+    });
+  }
+
+  async function resetVotes() {
+    const { data } = await supabaseClient
+      .from("vote_feelings_poll_items")
+      .select("*");
+
+    for (const item of data) {
+      await supabaseClient
+        .from("vote_feelings_poll_items")
+        .update({ count: 0 })
+        .eq("id", item.id);
+    }
+
+    loadBubbles();
+  }
+
+  document.getElementById("resetBtn").onclick = resetVotes;
+
+  loadBubbles();
+</script>
+
+</body>
+</html>
