@@ -116,11 +116,10 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     container.innerHTML = "";
 
     data.forEach(item => {
-      const bubble = document.createElement("div");
-      bubble.className = "bubble";
-      bubble.innerText = item.label;
+     const bubble = document.createElement("img");
 
-      bubble.style.background = colors[item.label] || "#ccc";
+bubble.src = item.label.toLowerCase() + ".png";
+bubble.className = "bubble";
 
       // size grows with votes
       const size = 16 + item.count * 5;
